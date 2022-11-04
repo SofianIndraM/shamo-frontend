@@ -42,7 +42,6 @@ class _MainPageState extends State<MainPage> {
           child: BottomNavigationBar(
             currentIndex: currentIndex,
             onTap: (value) {
-              print(value);
               setState(() {
                 currentIndex = value;
               });
@@ -116,16 +115,16 @@ class _MainPageState extends State<MainPage> {
       switch (currentIndex) {
         case 0:
           return HomePage();
-          break;
+
         case 1:
           return ChatPage();
-          break;
+
         case 2:
           return WishlistPage();
-          break;
+
         case 3:
           return ProfilePage();
-          break;
+
         default:
           return HomePage();
       }
