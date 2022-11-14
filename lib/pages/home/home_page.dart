@@ -169,7 +169,7 @@ class HomePage extends StatelessWidget {
                     )),
                 child: Text(
                   'Hiking',
-                  style: secondaryTextStyle.copyWith(
+                  style: subtitleTextStyle.copyWith(
                     fontSize: 13,
                     fontWeight: medium,
                   ),

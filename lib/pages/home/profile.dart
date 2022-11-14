@@ -6,97 +6,141 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget button() {
-      return Container(
-        margin: EdgeInsets.only(top: defaultMargin),
-        height: 55,
-        width: double.infinity,
-        child: TextButton(
-          onPressed: () {},
-          style: TextButton.styleFrom(
-            backgroundColor: primaryColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+    Widget header() {
+      return AppBar(
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        backgroundColor: backgroundColor1,
+        flexibleSpace: SafeArea(
+          child: Container(
+            padding: EdgeInsets.all(
+              defaultMargin,
             ),
-          ),
-          child: Text(
-            'Sign In',
-            style: primaryTextStyle.copyWith(
-              fontWeight: medium,
-              fontSize: 16,
+            child: Row(
+              children: [
+                ClipOval(
+                  child: Image.asset(
+                    'assets/image_profile.png',
+                    width: 64,
+                  ),
+                ),
+                SizedBox(
+                  width: 16,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Hallo, Alex',
+                        style: primaryTextStyle.copyWith(
+                          fontSize: 24,
+                          fontWeight: semiBold,
+                        ),
+                      ),
+                      Text(
+                        '@alexkeinn',
+                        style: subtitleTextStyle.copyWith(
+                          fontSize: 16,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/sign-in', (route) => false);
+                  },
+                  child: Image.asset(
+                    'assets/button_exit.png',
+                    width: 20,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
       );
     }
 
-    Widget email() {
+    Widget menuItem(String text) {
       return Container(
         margin: EdgeInsets.only(
-          top: defaultMargin,
+          top: 16,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Email',
-              style: primaryTextStyle.copyWith(
-                fontWeight: semiBold,
-                fontSize: 18,
+              text,
+              style: secondaryTextStyle.copyWith(
+                fontSize: 13,
               ),
             ),
-            SizedBox(
-              height: 6,
-            ),
-            Container(
-              height: 50,
-              padding: EdgeInsets.symmetric(
-                horizontal: 16,
-              ),
-              decoration: BoxDecoration(
-                color: backgroundColor4,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Image.asset(
-                    'assets/icon_email.png',
-                    width: 17,
-                  ),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      style: primaryTextStyle,
-                      decoration: InputDecoration.collapsed(
-                        hintText: 'Masukan Email',
-                        hintStyle: secondaryTextStyle,
-                      ),
-                    ),
-                  )
-                ],
-              ),
+            Icon(
+              Icons.chevron_right,
+              color: primaryTextColor,
             )
           ],
         ),
       );
     }
 
-    return ListView(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(
+    Widget content() {
+      return Expanded(
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(
             horizontal: defaultMargin,
+          ),
+          decoration: BoxDecoration(
+            color: backgroundColor3,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              button(),
-              email(),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Account',
+                style: primaryTextStyle.copyWith(
+                  fontSize: 16,
+                  fontWeight: semiBold,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/edit-profile');
+                },
+                child: menuItem('Edit Profile'),
+              ),
+              menuItem('Your Orders'),
+              menuItem('Help'),
+              SizedBox(
+                height: 30,
+              ),
+              Text(
+                'General',
+                style: primaryTextStyle.copyWith(
+                  fontSize: 16,
+                  fontWeight: semiBold,
+                ),
+              ),
+              menuItem('Privacy & Policy'),
+              menuItem('Term of Service'),
+              menuItem('Rate App'),
             ],
           ),
-        )
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        header(),
+        content(),
       ],
     );
   }
