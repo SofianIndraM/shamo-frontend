@@ -1,6 +1,6 @@
 {
-    "name": "shamo",
-    "short_name": "shamo",
+    "name": "shamo_frontend",
+    "short_name": "shamo_frontend",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

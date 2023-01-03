@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:shamo/theme.dart';
+import 'package:shamo_frontend/theme.dart';
 
 class ProductTile extends StatelessWidget {
   const ProductTile({Key? key}) : super(key: key);
+
+  get defaultMargin => null;
 
   @override
   Widget build(BuildContext context) {

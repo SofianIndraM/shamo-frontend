@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shamo/theme.dart';
+import 'package:shamo_frontend/theme.dart';
 
 class ChatTile extends StatelessWidget {
   const ChatTile({Key? key}) : super(key: key);

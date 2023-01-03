@@ -1,23 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:shamo/theme.dart';
+import 'package:provider/provider.dart';
+import 'package:shamo_frontend/theme.dart';
 
-class EditProflePage extends StatelessWidget {
-  const EditProflePage({Key? key}) : super(key: key);
+import '../models/user_model.dart';
+import '../provider/auth_provider.dart';
+
+class EditProfilePage extends StatelessWidget {
+  const EditProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    UserModel user = authProvider.user;
+
     PreferredSizeWidget header() {
       return AppBar(
         backgroundColor: backgroundColor1,
         leading: IconButton(
-          icon: Icon(Icons.close),
           onPressed: () {
             Navigator.pop(context);
           },
+          icon: Icon(
+            Icons.close,
+          ),
         ),
         centerTitle: true,
-        title: Text('Edit Profile'),
-        elevation: 0,
+        title: Text(
+          'Edit Profile',
+          style: primaryTextStyle.copyWith(
+            fontWeight: medium,
+            fontSize: 18,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {},
@@ -50,11 +64,11 @@ class EditProflePage extends StatelessWidget {
             TextFormField(
               style: primaryTextStyle,
               decoration: InputDecoration(
-                hintText: 'Masukan Nama',
+                hintText: '${user.name}',
                 hintStyle: primaryTextStyle,
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
-                    color: subtitleTextColor,
+                    color: subtitleColor,
                   ),
                 ),
               ),
@@ -84,11 +98,11 @@ class EditProflePage extends StatelessWidget {
             TextFormField(
               style: primaryTextStyle,
               decoration: InputDecoration(
-                hintText: 'Masukan Username',
+                hintText: '${user.username}',
                 hintStyle: primaryTextStyle,
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
-                    color: subtitleTextColor,
+                    color: subtitleColor,
                   ),
                 ),
               ),
@@ -107,7 +121,7 @@ class EditProflePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Email Addresss',
+              'Email Address',
               style: secondaryTextStyle.copyWith(
                 fontSize: 13,
               ),
@@ -118,11 +132,11 @@ class EditProflePage extends StatelessWidget {
             TextFormField(
               style: primaryTextStyle,
               decoration: InputDecoration(
-                hintText: 'Masukan Email',
+                hintText: '${user.email}',
                 hintStyle: primaryTextStyle,
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
-                    color: subtitleTextColor,
+                    color: subtitleColor,
                   ),
                 ),
               ),
@@ -132,26 +146,28 @@ class EditProflePage extends StatelessWidget {
       );
     }
 
-    Widget body() {
+    Widget content() {
       return Container(
+        width: double.infinity,
         padding: EdgeInsets.symmetric(
           horizontal: defaultMargin,
         ),
-        width: double.infinity,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
+              width: 100,
+              height: 100,
               margin: EdgeInsets.only(
                 top: defaultMargin,
               ),
-              height: 100,
-              width: 100,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: AssetImage(
-                    'assets/image_profile.png',
+                  image: NetworkImage(
+                    '${user.profilePhotoUrl}',
                   ),
+                  fit: BoxFit.fill,
                 ),
               ),
             ),
@@ -164,10 +180,10 @@ class EditProflePage extends StatelessWidget {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: backgroundColor3,
       appBar: header(),
-      body: body(),
-      resizeToAvoidBottomInset: false,
+      body: content(),
     );
   }
 }

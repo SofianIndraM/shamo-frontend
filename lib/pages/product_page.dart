@@ -1,9 +1,19 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:shamo/theme.dart';
+import 'package:provider/provider.dart';
+import 'package:shamo_frontend/models/product_model.dart';
+import 'package:shamo_frontend/pages/detail_chat_page.dart';
+import 'package:shamo_frontend/provider/cart_provider.dart';
+import 'package:shamo_frontend/provider/wishlist_provider.dart';
+
+import 'package:shamo_frontend/theme.dart';
 
 class ProductPage extends StatefulWidget {
-  ProductPage({Key? key}) : super(key: key);
+  final ProductModel product;
+  ProductPage(
+    this.product, {
+    super.key,
+  });
 
   @override
   State<ProductPage> createState() => _ProductPageState();
@@ -12,27 +22,27 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage> {
   List images = [
     'assets/image_shoes.png',
-    'assets/image_shoes4.png',
-    'assets/image_shoes2.png',
-    'assets/image_shoes3.png',
+    'assets/image_shoes.png',
+    'assets/image_shoes.png',
   ];
-
   List familiarShoes = [
     'assets/image_shoes.png',
-    'assets/image_shoes4.png',
     'assets/image_shoes2.png',
     'assets/image_shoes3.png',
+    'assets/image_shoes4.png',
+    'assets/image_shoes5.png',
+    'assets/image_shoes6.png',
+    'assets/image_shoes7.png',
     'assets/image_shoes.png',
-    'assets/image_shoes4.png',
-    'assets/image_shoes2.png',
-    'assets/image_shoes3.png',
   ];
 
-  bool isWishlist = false;
   int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    WishlistProvider wishlistProvider = Provider.of<WishlistProvider>(context);
+    CartProvider cartProvider = Provider.of<CartProvider>(context);
+
     Future<void> showSuccessDialog() async {
       return showDialog(
         context: context,
@@ -47,12 +57,12 @@ class _ProductPageState extends State<ProductPage> {
               child: Column(
                 children: [
                   Align(
-                    alignment: Alignment.centerLeft,
-                    child: GestureDetector(
-                      onTap: () {
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Icon(
+                      icon: Icon(
                         Icons.close,
                         color: primaryTextColor,
                       ),
@@ -68,8 +78,8 @@ class _ProductPageState extends State<ProductPage> {
                   Text(
                     'Hurray :)',
                     style: primaryTextStyle.copyWith(
-                      fontSize: 18,
                       fontWeight: semiBold,
+                      fontSize: 18,
                     ),
                   ),
                   SizedBox(
@@ -79,48 +89,37 @@ class _ProductPageState extends State<ProductPage> {
                     'Item added successfully',
                     style: secondaryTextStyle,
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
                   Container(
                     height: 44,
-                    width: 154,
+                    margin: EdgeInsets.only(
+                      top: 20,
+                    ),
                     child: TextButton(
-                        onPressed: () {},
-                        style: TextButton.styleFrom(
-                          backgroundColor: primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/cart');
+                      },
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 10,
                         ),
-                        child: Text(
-                          'View My Cart',
-                          style: primaryTextStyle.copyWith(
-                            fontSize: 16,
-                            fontWeight: medium,
-                          ),
-                        )),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        backgroundColor: primaryColor,
+                      ),
+                      child: Text(
+                        'View My Cart',
+                        style: primaryTextStyle.copyWith(
+                            fontWeight: medium, fontSize: 16),
+                      ),
+                    ),
                   )
                 ],
               ),
             ),
           ),
         ),
-      );
-    }
-
-    Widget familiarShoesCard(String imageUrl) {
-      return Container(
-        height: 54,
-        width: 54,
-        margin: EdgeInsets.only(right: 16),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6),
-            image: DecorationImage(
-              image: AssetImage(
-                imageUrl,
-              ),
-            )),
       );
     }
 
@@ -132,8 +131,8 @@ class _ProductPageState extends State<ProductPage> {
         width: currentIndex == index ? 16 : 4,
         height: 4,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
           color: currentIndex == index ? primaryColor : Color(0xffC4C4C4),
+          borderRadius: BorderRadius.circular(10),
         ),
       );
     }
@@ -153,7 +152,7 @@ class _ProductPageState extends State<ProductPage> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/home');
                   },
                   child: Icon(
                     Icons.chevron_left,
@@ -161,16 +160,17 @@ class _ProductPageState extends State<ProductPage> {
                 ),
                 Icon(
                   Icons.shopping_bag,
-                )
+                  color: backgroundColor1,
+                ),
               ],
             ),
           ),
           CarouselSlider(
-            items: images
+            items: widget.product.galleries!
                 .map(
-                  (image) => Image.asset(
-                    image,
-                    width: MediaQuery.of(context).size.width,
+                  (image) => Image.network(
+                    image.url,
+                    width: double.infinity,
                     height: 310,
                     fit: BoxFit.cover,
                   ),
@@ -190,23 +190,39 @@ class _ProductPageState extends State<ProductPage> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: images.map((e) {
-              index++;
-              return indicator(index);
-            }).toList(),
+            children: widget.product.galleries!.map(
+              (e) {
+                index++;
+                return indicator(index);
+              },
+            ).toList(),
           )
         ],
       );
     }
 
+    Widget familiarShoesCard(String imageUrl) {
+      return Container(
+        height: 54,
+        width: 54,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              imageUrl,
+            ),
+          ),
+          borderRadius: BorderRadius.circular(6),
+        ),
+      );
+    }
+
     Widget content() {
       int index = -1;
-
       return Container(
-        width: double.infinity,
         margin: EdgeInsets.only(
           top: 17,
         ),
+        width: double.infinity,
         decoration: BoxDecoration(
           color: backgroundColor1,
           borderRadius: BorderRadius.vertical(
@@ -214,47 +230,49 @@ class _ProductPageState extends State<ProductPage> {
           ),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //NOTE: HEADER
             Container(
               margin: EdgeInsets.only(
                 top: defaultMargin,
-                right: defaultMargin,
                 left: defaultMargin,
+                right: defaultMargin,
               ),
+              width: double.infinity,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'TERREX URBAN LOW',
-                          style: primaryTextStyle.copyWith(
-                            fontSize: 18,
-                            fontWeight: semiBold,
-                          ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.product.name,
+                        style: primaryTextStyle.copyWith(
+                          fontWeight: semiBold,
+                          fontSize: 18,
                         ),
-                        Text(
-                          'Hiking',
-                          style: secondaryTextStyle.copyWith(
-                            fontSize: 12,
-                          ),
+                      ),
+                      Text(
+                        widget.product.category!.name,
+                        style: secondaryTextStyle.copyWith(
+                          fontSize: 12,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   GestureDetector(
                     onTap: () {
-                      setState(() {
-                        isWishlist = !isWishlist;
-                      });
-                      if (isWishlist) {
+                      wishlistProvider.setProduct(widget.product);
+                      if (wishlistProvider.isWishlist(widget.product)) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             backgroundColor: secondaryColor,
                             content: Text(
-                              'Has been added to the Wishlist',
+                              'Has been added to the Whitelist',
+                              style: primaryTextStyle.copyWith(
+                                fontSize: 12,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -264,7 +282,10 @@ class _ProductPageState extends State<ProductPage> {
                           SnackBar(
                             backgroundColor: alertColor,
                             content: Text(
-                              'Has been removed from the Wishlist',
+                              'Has been removed from the Whitelist',
+                              style: primaryTextStyle.copyWith(
+                                fontSize: 12,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -272,12 +293,12 @@ class _ProductPageState extends State<ProductPage> {
                       }
                     },
                     child: Image.asset(
-                      isWishlist
+                      wishlistProvider.isWishlist(widget.product)
                           ? 'assets/button_wishlist_blue.png'
                           : 'assets/button_wishlist.png',
                       width: 46,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -289,10 +310,9 @@ class _ProductPageState extends State<ProductPage> {
                 right: defaultMargin,
               ),
               padding: EdgeInsets.all(16),
-              width: double.infinity,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
                 color: backgroundColor2,
+                borderRadius: BorderRadius.circular(4),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -302,7 +322,7 @@ class _ProductPageState extends State<ProductPage> {
                     style: primaryTextStyle,
                   ),
                   Text(
-                    '\$143,98',
+                    '\$${widget.product.price}',
                     style: priceTextStyle.copyWith(
                       fontSize: 16,
                       fontWeight: semiBold,
@@ -315,8 +335,8 @@ class _ProductPageState extends State<ProductPage> {
             Container(
               margin: EdgeInsets.only(
                 top: defaultMargin,
-                right: defaultMargin,
                 left: defaultMargin,
+                right: defaultMargin,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -331,25 +351,25 @@ class _ProductPageState extends State<ProductPage> {
                     height: 12,
                   ),
                   Text(
-                    'Unpaved trails and mixed surfaces are easy when you have the traction and support you need. Casual enough for the daily commute.',
+                    widget.product.description,
                     style: subtitleTextStyle.copyWith(
                       fontWeight: light,
                     ),
-                    textAlign: TextAlign.justify,
-                  )
+                  ),
                 ],
               ),
             ),
-            //NOTE: FAMILIAR SHOES
+            //NOTE: FIMILIAR SHOES
             Container(
-              width: double.infinity,
-              margin: EdgeInsets.only(top: 30),
+              margin: EdgeInsets.only(
+                top: defaultMargin,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: defaultMargin,
+                    padding: EdgeInsets.only(
+                      left: defaultMargin,
                     ),
                     child: Text(
                       'Familiar Shoes',
@@ -364,17 +384,19 @@ class _ProductPageState extends State<ProductPage> {
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: familiarShoes.map((image) {
-                        index++;
-                        return Container(
-                          margin: EdgeInsets.only(
-                            left: index == 0 ? defaultMargin : 0,
-                          ),
-                          child: familiarShoesCard(image),
-                        );
-                      }).toList(),
+                      children: familiarShoes.map(
+                        (image) {
+                          index++;
+                          return Container(
+                            margin: EdgeInsets.only(
+                              left: index == 0 ? defaultMargin : 16,
+                            ),
+                            child: familiarShoesCard(image),
+                          );
+                        },
+                      ).toList(),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -387,28 +409,27 @@ class _ProductPageState extends State<ProductPage> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/detail-chat');
-                    },
-                    child: Container(
-                      height: 54,
-                      width: 54,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(
-                            'assets/button_chat.png',
-                          ),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailChatPage(widget.product),
                         ),
-                      ),
+                      );
+                    },
+                    child: Image.asset(
+                      'assets/button_chat.png',
+                      width: 54,
                     ),
-                  ),
-                  SizedBox(
-                    width: 16,
                   ),
                   Expanded(
                     child: Container(
+                      margin: EdgeInsets.only(
+                        left: 16,
+                      ),
                       height: 54,
                       child: TextButton(
                         onPressed: () {
+                          cartProvider.addCart(widget.product);
                           showSuccessDialog();
                         },
                         style: TextButton.styleFrom(

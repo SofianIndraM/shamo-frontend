@@ -1,14 +1,14 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:shamo/pages/home/chat_page.dart';
-import 'package:shamo/pages/home/home_page.dart';
-import 'package:shamo/pages/home/profile.dart';
-import 'package:shamo/pages/home/wishlist_page.dart';
-import 'package:shamo/theme.dart';
+import 'package:shamo_frontend/pages/home/chat_page.dart';
+import 'package:shamo_frontend/pages/home/home_page.dart';
+import 'package:shamo_frontend/pages/home/profile_page.dart';
+import 'package:shamo_frontend/pages/home/wishlist_page.dart';
+import 'package:shamo_frontend/theme.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({
+    super.key,
+  });
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -16,10 +16,9 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
-    Widget cartButon() {
+    Widget cartButton() {
       return FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, '/cart');
@@ -39,17 +38,18 @@ class _MainPageState extends State<MainPage> {
         ),
         child: BottomAppBar(
           shape: CircularNotchedRectangle(),
-          notchMargin: 12,
+          notchMargin: 10,
           clipBehavior: Clip.antiAlias,
           child: BottomNavigationBar(
-            currentIndex: currentIndex,
-            onTap: (value) {
-              setState(() {
-                currentIndex = value;
-              });
-            },
             backgroundColor: backgroundColor4,
             type: BottomNavigationBarType.fixed,
+            onTap: (value) {
+              setState(
+                () {
+                  currentIndex = value;
+                },
+              );
+            },
             items: [
               BottomNavigationBarItem(
                 icon: Container(
@@ -117,16 +117,12 @@ class _MainPageState extends State<MainPage> {
       switch (currentIndex) {
         case 0:
           return HomePage();
-
         case 1:
           return ChatPage();
-
         case 2:
           return WishlistPage();
-
         case 3:
           return ProfilePage();
-
         default:
           return HomePage();
       }
@@ -134,7 +130,7 @@ class _MainPageState extends State<MainPage> {
 
     return Scaffold(
       backgroundColor: currentIndex == 0 ? backgroundColor1 : backgroundColor3,
-      floatingActionButton: cartButon(),
+      floatingActionButton: cartButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: customBottomNav(),
       body: body(),

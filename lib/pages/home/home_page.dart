@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:shamo/theme.dart';
-
-import '../widgets/product_card.dart';
-import '../widgets/product_tile.dart';
+import 'package:provider/provider.dart';
+import 'package:shamo_frontend/models/user_model.dart';
+import 'package:shamo_frontend/provider/auth_provider.dart';
+import 'package:shamo_frontend/provider/product_provider.dart';
+import 'package:shamo_frontend/theme.dart';
+import 'package:shamo_frontend/widgets/product_card.dart';
+import 'package:shamo_frontend/widgets/product_tile.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider = Provider.of<AuthProvider>(context);
+    ProductProvider productProvider = Provider.of<ProductProvider>(context);
+    UserModel user = authProvider.user;
+
+    print(productProvider.products);
+
     Widget header() {
       return Container(
         margin: EdgeInsets.only(
           top: defaultMargin,
-          right: defaultMargin,
           left: defaultMargin,
+          right: defaultMargin,
         ),
         child: Row(
           children: [
@@ -23,14 +32,14 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Hallo, Alex',
+                    'Hallo, ${user.name}',
                     style: primaryTextStyle.copyWith(
                       fontSize: 24,
                       fontWeight: semiBold,
                     ),
                   ),
                   Text(
-                    '@alexkeinn',
+                    '@${user.username}',
                     style: subtitleTextStyle.copyWith(
                       fontSize: 16,
                     ),
@@ -44,8 +53,8 @@ class HomePage extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                  image: AssetImage(
-                    'assets/image_profile.png',
+                  image: NetworkImage(
+                    '${user.profilePhotoUrl}',
                   ),
                 ),
               ),
@@ -69,8 +78,8 @@ class HomePage extends StatelessWidget {
               ),
               Container(
                 padding: EdgeInsets.symmetric(
-                  vertical: 10,
                   horizontal: 12,
+                  vertical: 10,
                 ),
                 margin: EdgeInsets.only(
                   right: 16,
@@ -89,18 +98,19 @@ class HomePage extends StatelessWidget {
               ),
               Container(
                 padding: EdgeInsets.symmetric(
-                  vertical: 10,
                   horizontal: 12,
+                  vertical: 10,
                 ),
                 margin: EdgeInsets.only(
                   right: 16,
                 ),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: transparentColor,
-                    border: Border.all(
-                      color: subtitleTextColor,
-                    )),
+                  color: transparentColor,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: subtitleColor,
+                  ),
+                ),
                 child: Text(
                   'Running',
                   style: subtitleTextStyle.copyWith(
@@ -111,18 +121,19 @@ class HomePage extends StatelessWidget {
               ),
               Container(
                 padding: EdgeInsets.symmetric(
-                  vertical: 10,
                   horizontal: 12,
+                  vertical: 10,
                 ),
                 margin: EdgeInsets.only(
                   right: 16,
                 ),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: transparentColor,
-                    border: Border.all(
-                      color: subtitleTextColor,
-                    )),
+                  color: transparentColor,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: subtitleColor,
+                  ),
+                ),
                 child: Text(
                   'Training',
                   style: subtitleTextStyle.copyWith(
@@ -133,18 +144,19 @@ class HomePage extends StatelessWidget {
               ),
               Container(
                 padding: EdgeInsets.symmetric(
-                  vertical: 10,
                   horizontal: 12,
+                  vertical: 10,
                 ),
                 margin: EdgeInsets.only(
                   right: 16,
                 ),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: transparentColor,
-                    border: Border.all(
-                      color: subtitleTextColor,
-                    )),
+                  color: transparentColor,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: subtitleColor,
+                  ),
+                ),
                 child: Text(
                   'Basketball',
                   style: subtitleTextStyle.copyWith(
@@ -155,18 +167,19 @@ class HomePage extends StatelessWidget {
               ),
               Container(
                 padding: EdgeInsets.symmetric(
-                  vertical: 10,
                   horizontal: 12,
+                  vertical: 10,
                 ),
                 margin: EdgeInsets.only(
                   right: 16,
                 ),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: transparentColor,
-                    border: Border.all(
-                      color: subtitleTextColor,
-                    )),
+                  color: transparentColor,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: subtitleColor,
+                  ),
+                ),
                 child: Text(
                   'Hiking',
                   style: subtitleTextStyle.copyWith(
@@ -185,8 +198,8 @@ class HomePage extends StatelessWidget {
       return Container(
         margin: EdgeInsets.only(
           top: defaultMargin,
-          left: defaultMargin,
           right: defaultMargin,
+          left: defaultMargin,
         ),
         child: Text(
           'Popular Products',
@@ -199,23 +212,24 @@ class HomePage extends StatelessWidget {
     }
 
     Widget popularProducts() {
+      print(productProvider.products.length);
       return Container(
         margin: EdgeInsets.only(
-          top: defaultMargin,
+          top: 14,
         ),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
+              SizedBox(
+                width: defaultMargin,
+              ),
               Row(
-                children: [
-                  SizedBox(
-                    width: defaultMargin,
-                  ),
-                  ProductCard(),
-                  ProductCard(),
-                  ProductCard(),
-                ],
+                children: productProvider.products
+                    .map(
+                      (product) => ProductCard(product),
+                    )
+                    .toList(),
               ),
             ],
           ),
@@ -227,8 +241,8 @@ class HomePage extends StatelessWidget {
       return Container(
         margin: EdgeInsets.only(
           top: defaultMargin,
-          left: defaultMargin,
           right: defaultMargin,
+          left: defaultMargin,
         ),
         child: Text(
           'New Arrivals',
@@ -246,11 +260,11 @@ class HomePage extends StatelessWidget {
           top: 14,
         ),
         child: Column(
-          children: [
-            ProductTile(),
-            ProductTile(),
-            ProductTile(),
-          ],
+          children: productProvider.products
+              .map(
+                (product) => ProductTile(product),
+              )
+              .toList(),
         ),
       );
     }

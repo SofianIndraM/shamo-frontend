@@ -1,4 +1,4 @@
-# shamo
+# shamo_frontend
 
 A new Flutter project.
 

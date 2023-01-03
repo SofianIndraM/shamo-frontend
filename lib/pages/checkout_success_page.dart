@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:shamo/theme.dart';
+import 'package:shamo_frontend/theme.dart';
 
 class CheckoutSuccessPage extends StatelessWidget {
-  const CheckoutSuccessPage({Key? key}) : super(key: key);
+  const CheckoutSuccessPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     PreferredSizeWidget header() {
       return AppBar(
-        centerTitle: true,
         backgroundColor: backgroundColor1,
-        title: Text('Checkout Success'),
-        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          'Checkout Success',
+          style: primaryTextStyle.copyWith(
+            fontWeight: medium,
+            fontSize: 18,
+          ),
+        ),
       );
     }
 
@@ -22,7 +27,7 @@ class CheckoutSuccessPage extends StatelessWidget {
           children: [
             Image.asset(
               'assets/icon_empty_cart.png',
-              width: 80,
+              height: 69,
             ),
             SizedBox(
               height: 20,
@@ -30,8 +35,8 @@ class CheckoutSuccessPage extends StatelessWidget {
             Text(
               'You made a transaction',
               style: primaryTextStyle.copyWith(
-                fontSize: 16,
                 fontWeight: medium,
+                fontSize: 16,
               ),
             ),
             SizedBox(
@@ -43,15 +48,14 @@ class CheckoutSuccessPage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             Container(
+              width: 196,
+              height: 44,
               margin: EdgeInsets.only(
                 top: defaultMargin,
               ),
-              height: 44,
-              width: 196,
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, '/home', (route) => false);
+                  Navigator.pushNamed(context, '/home');
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: primaryColor,
@@ -62,18 +66,18 @@ class CheckoutSuccessPage extends StatelessWidget {
                 child: Text(
                   'Order Other Shoes',
                   style: primaryTextStyle.copyWith(
-                    fontSize: 16,
                     fontWeight: medium,
+                    fontSize: 16,
                   ),
                 ),
               ),
             ),
             Container(
+              height: 44,
+              width: 196,
               margin: EdgeInsets.only(
                 top: 12,
               ),
-              height: 44,
-              width: 196,
               child: TextButton(
                 onPressed: () {},
                 style: TextButton.styleFrom(
@@ -85,13 +89,13 @@ class CheckoutSuccessPage extends StatelessWidget {
                 child: Text(
                   'View My Order',
                   style: primaryTextStyle.copyWith(
-                    fontSize: 16,
                     fontWeight: medium,
+                    fontSize: 16,
                     color: Color(0xffB7B6BF),
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       );

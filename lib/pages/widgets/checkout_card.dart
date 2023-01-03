@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shamo/theme.dart';
+import 'package:shamo_frontend/theme.dart';
 
 class CheckoutCard extends StatelessWidget {
   const CheckoutCard({Key? key}) : super(key: key);
